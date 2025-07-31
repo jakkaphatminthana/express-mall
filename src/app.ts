@@ -2,9 +2,12 @@ import app from '@/config/express';
 import config from '@/config/config';
 
 import routes from '@/routes';
+import { sequelize } from '@/config/connection';
 
-(async () => {
+async function main() {
   try {
+    await sequelize.authenticate();
+
     app.use(routes);
     app.listen(config.PORT, () => {
       console.log(`✅ Server running on port: ${config.PORT}`);
@@ -15,7 +18,7 @@ import routes from '@/routes';
       process.exit(1);
     }
   }
-})();
+}
 
 const handleServerShutdown = async () => {
   try {
@@ -25,6 +28,8 @@ const handleServerShutdown = async () => {
     console.log('💥 Error during server shutdown:', error);
   }
 };
+
+main();
 
 // Shutdown by kill command
 process.on('SIGTERM', handleServerShutdown);
