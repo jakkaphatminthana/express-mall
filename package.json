@@ -1,0 +1,30 @@
+{
+  "name": "express-mall",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/app.js",
+    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node -r tsconfig-paths/register' src/app.ts",
+    "lint": "eslint 'src/**/*.ts'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.12.3",
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.1.0",
+    "dotenv": "^17.2.1",
+    "eslint": "^9.32.0",
+    "express": "^5.1.0",
+    "i": "^0.3.7",
+    "nodemon": "^3.1.10",
+    "pnpm": "^10.13.1",
+    "prettier": "^3.6.2",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.8.3"
+  }
+}

@@ -1,0 +1,10 @@
+
+.env
+
+node_modules/
+dist/
+build/
+*.log
+
+# macOS system files
+.DS_Store
