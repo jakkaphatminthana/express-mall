@@ -106,12 +106,4 @@ Product.hasMany(OrderProduct, {
   as: 'product',
 });
 
-// Many to Many (Connect Order - Product by OrderProduct)
-Product.belongsToMany(Order, {
-  through: OrderProduct, // center model
-  foreignKey: 'productId', // FK from orderProdcut to product
-  otherKey: 'orderId', // FK from orderProdcut to order
-  as: 'order',
-});
-
 export { Product, ProductAttributes, ProductCreationAttributes };

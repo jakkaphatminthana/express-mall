@@ -90,12 +90,12 @@ Order.hasOne(PointTransaction, {
   as: 'pointTransaction',
 });
 
-// Many to Many (Connect Order - Product by OrderProduct)
-Order.belongsToMany(Product, {
-  through: OrderProduct, // center model
-  foreignKey: 'orderId', // FK from orderProdcut to order
-  otherKey: 'productId', // FK from orderProdcut to product
-  as: 'product',
-});
+// // Many to Many (Connect Order - Product by OrderProduct)
+// Order.belongsToMany(Product, {
+//   through: OrderProduct, // center model
+//   foreignKey: 'orderId', // FK from orderProdcut to order
+//   otherKey: 'productId', // FK from orderProdcut to product
+//   as: 'product',
+// });
 
 export { Order, OrderAttributes, OrderCreationAttributes };

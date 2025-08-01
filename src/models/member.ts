@@ -80,11 +80,7 @@ Member.init(
     tableName: 'Members',
     timestamps: true,
     // good performance query
-    indexes: [
-      { fields: ['code'] },
-      { fields: ['email'] },
-      { fields: ['isActive'] },
-    ],
+    indexes: [{ fields: ['code'] }, { fields: ['isActive'] }],
   },
 );
 
