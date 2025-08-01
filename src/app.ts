@@ -6,9 +6,19 @@ import { sequelize } from '@/config/connection';
 
 async function main() {
   try {
+    // check database connection
     await sequelize.authenticate();
 
-    app.use(routes);
+    // router
+    routes.get('/', (req, res) => {
+      res.status(200).json({
+        message: 'API is live',
+        status: 'OK',
+        timestamp: new Date().toISOString(),
+      });
+    });
+    app.use('/api', routes);
+
     app.listen(config.PORT, () => {
       console.log(`✅ Server running on port: ${config.PORT}`);
     });
