@@ -1,5 +1,7 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '@/config/connection';
+import { OrderProduct } from './orderProduct';
+import { Order } from './order';
 
 interface ProductAttributes {
   id: number;
@@ -97,4 +99,19 @@ Product.init(
     indexes: [{ fields: ['name'] }, { fields: ['isActive'] }],
   },
 );
+
+// Associations
+Product.hasMany(OrderProduct, {
+  foreignKey: 'productId',
+  as: 'product',
+});
+
+// Many to Many (Connect Order - Product by OrderProduct)
+Product.belongsToMany(Order, {
+  through: OrderProduct, // center model
+  foreignKey: 'productId', // FK from orderProdcut to product
+  otherKey: 'orderId', // FK from orderProdcut to order
+  as: 'order',
+});
+
 export { Product, ProductAttributes, ProductCreationAttributes };

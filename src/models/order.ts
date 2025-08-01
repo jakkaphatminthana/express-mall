@@ -1,5 +1,9 @@
 import { Association, DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '@/config/connection';
+import { Member } from './member';
+import { OrderProduct } from './orderProduct';
+import { PointTransaction } from './pointTransaction';
+import { Product } from './product';
 
 interface OrderAttributes {
   id: number;
@@ -69,5 +73,29 @@ Order.init(
     indexes: [{ fields: ['memberId'] }, { fields: ['createdAt'] }],
   },
 );
+
+// Associations
+Order.belongsTo(Member, {
+  foreignKey: 'memberId',
+  as: 'member',
+});
+
+Order.hasMany(OrderProduct, {
+  foreignKey: 'orderId',
+  as: 'orderProducts',
+});
+
+Order.hasOne(PointTransaction, {
+  foreignKey: 'orderId',
+  as: 'pointTransaction',
+});
+
+// Many to Many (Connect Order - Product by OrderProduct)
+Order.belongsToMany(Product, {
+  through: OrderProduct, // center model
+  foreignKey: 'orderId', // FK from orderProdcut to order
+  otherKey: 'productId', // FK from orderProdcut to product
+  as: 'product',
+});
 
 export { Order, OrderAttributes, OrderCreationAttributes };

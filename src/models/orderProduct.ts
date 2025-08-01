@@ -1,5 +1,7 @@
 import { Association, DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '@/config/connection';
+import { Order } from './order';
+import { Product } from './product';
 
 interface OrderProductAttributes {
   id: number;
@@ -107,5 +109,16 @@ OrderProduct.init(
     },
   },
 );
+
+// Associations
+OrderProduct.belongsTo(Order, {
+  foreignKey: 'orderId',
+  as: 'order',
+});
+
+OrderProduct.belongsTo(Product, {
+  foreignKey: 'productId',
+  as: 'product',
+});
 
 export { OrderProduct, OrderProductAttributes, OrderProductCreationAttributes };
