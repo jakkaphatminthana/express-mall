@@ -1,28 +1,31 @@
-import { Op, WhereOptions } from 'sequelize';
+import { FindAndCountOptions, Op, WhereOptions } from 'sequelize';
 import {
   Product,
   ProductAttributes,
   ProductCreationAttributes,
 } from '@/models/product';
+import { ProductSchemaType } from '@/validators/product.validator';
 
 export class ProductRepository {
-  async findAll() {
-    const page = 1;
-    const limit = 10;
-    const offset = (page - 1) * limit;
+  async findAll(query: ProductSchemaType) {
+    const page = query.page || 1;
+    const pageSize = query.pageSize || 10;
+    const offset = (page - 1) * pageSize;
 
-    const { count, rows } = await Product.findAndCountAll({
-      limit,
-      offset,
+    let whereClause: WhereOptions<ProductAttributes> = {};
+
+    if (query.search) {
+      whereClause = {
+        [Op.or]: [{ name: { [Op.iLike]: `%${query.search}%` } }],
+      };
+    }
+
+    return await Product.findAndCountAll({
+      where: whereClause,
       order: [['createdAt', 'DESC']],
+      limit: pageSize,
+      offset,
     });
-
-    return {
-      data: rows,
-      total: count,
-      totalPages: Math.ceil(count / limit),
-      currentPage: page,
-    };
   }
 
   async create() {

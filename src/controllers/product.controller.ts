@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ProductService } from '@/services/product.service';
+import { ProductSchemaType } from '@/validators/product.validator';
+import { sendError } from '@/utils/errorUtils';
 
 export class ProductController {
   private productService: ProductService;
@@ -13,11 +15,18 @@ export class ProductController {
     res: Response,
     next: NextFunction,
   ): Promise<void> => {
-    const result = await this.productService.getProducts();
+    try {
+      const query = req.query as ProductSchemaType;
+      const result = await this.productService.getProducts(query);
 
-    res.status(200).json({
-      data: result.data,
-    });
+      res.status(200).json({
+        success: true,
+        data: result,
+      });
+    } catch (error) {
+      console.error('Error while getProducts: ', error);
+      sendError.internalServer(res, error);
+    }
   };
 
   create = async (
