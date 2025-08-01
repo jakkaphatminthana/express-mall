@@ -1,7 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
-import { ProductService } from '@/services/product.service';
-import { ProductSchemaType } from '@/validators/product.validator';
 import { sendError } from '@/utils/errorUtils';
+
+import { ProductService } from '@/services/product.service';
+import {
+  CreateProductSchemaType,
+  ProductSchemaType,
+} from '@/validators/product.validator';
+import { ControllerBaseFunctionType } from './base.controller';
 
 export class ProductController {
   private productService: ProductService;
@@ -10,13 +15,12 @@ export class ProductController {
     this.productService = new ProductService();
   }
 
-  getProducts = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  getProducts: ControllerBaseFunctionType<{}, {}, ProductSchemaType> = async (
+    req,
+    res,
+  ) => {
     try {
-      const query = req.query as ProductSchemaType;
+      const query = req.query;
       const result = await this.productService.getProducts(query);
 
       res.status(200).json({
@@ -29,15 +33,21 @@ export class ProductController {
     }
   };
 
-  create = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
+  create: ControllerBaseFunctionType<CreateProductSchemaType, {}, {}> = async (
+    req,
+    res,
   ): Promise<void> => {
-    const result = await this.productService.createProduct();
+    try {
+      const body = req.body;
+      const result = await this.productService.createProduct(body);
 
-    res.status(201).json({
-      data: result,
-    });
+      res.status(201).json({
+        success: true,
+        data: result,
+      });
+    } catch (error) {
+      console.error('Error while getProducts: ', error);
+      sendError.internalServer(res, error);
+    }
   };
 }
