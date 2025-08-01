@@ -1,7 +1,6 @@
 import { Association, DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '@/config/connection';
-import { Order } from './order';
-import { Product } from './product';
+import { Order, Product } from '.';
 
 interface OrderProductAttributes {
   id: number;
@@ -121,4 +120,24 @@ OrderProduct.init(
 //   as: 'product',
 // });
 
-export { OrderProduct, OrderProductAttributes, OrderProductCreationAttributes };
+OrderProduct.belongsTo(Product, {
+  foreignKey: 'productId',
+  targetKey: 'id',
+  as: 'product',
+});
+
+Product.hasMany(OrderProduct, {
+  as: 'orderProducts',
+});
+
+OrderProduct.belongsTo(Order, {
+  foreignKey: 'orderId',
+  targetKey: 'id',
+  as: 'order',
+});
+
+Order.hasMany(OrderProduct, {
+  as: 'orderProducts',
+});
+
+export default OrderProduct;

@@ -1,7 +1,6 @@
 import { Association, DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '@/config/connection';
-import { Member } from './member';
-import { Order } from './order';
+import { Member, Order } from '.';
 
 interface PointTransactionAttributes {
   id: number;
@@ -86,19 +85,15 @@ PointTransaction.init(
   },
 );
 
-// Associations
-PointTransaction.belongsTo(Member, {
-  foreignKey: 'memberId',
-  as: 'member',
-});
+// // Associations
+// PointTransaction.belongsTo(Member, {
+//   foreignKey: 'memberId',
+//   as: 'member',
+// });
 
-PointTransaction.belongsTo(Order, {
-  foreignKey: 'orderId',
-  as: 'order',
-});
+// PointTransaction.belongsTo(Order, {
+//   foreignKey: 'orderId',
+//   as: 'order',
+// });
 
-export {
-  PointTransaction,
-  PointTransactionAttributes,
-  PointTransactionCreationAttributes,
-};
+export default PointTransaction;
