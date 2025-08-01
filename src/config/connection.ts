@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize';
 
-import config from '@/config/config';
+import config from '@/config';
 
 const sequelize = new Sequelize({
   database: config.DB_NAME,
@@ -9,7 +9,7 @@ const sequelize = new Sequelize({
   port: config.DB_PORT,
   dialect: 'postgres',
   host: 'localhost',
-  logging: console.log,
+  logging: false, //console.log
 });
 
 export { sequelize };

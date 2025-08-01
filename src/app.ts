@@ -1,5 +1,5 @@
 import app from '@/config/express';
-import config from '@/config/config';
+import config from '@/config';
 
 import routes from '@/routes';
 import { sequelize } from '@/config/connection';
