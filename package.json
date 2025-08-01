@@ -15,6 +15,7 @@
     "db-migrate-undo-all": "sequelize-cli db:migrate:undo:all",
     "db-seed": "sequelize-cli db:seed:all",
     "db-migrate:generate": "sequelize-cli migration:generate --name",
+    "db-seed:generate": "sequelize-cli seed:generate --name",
     "prepare": "husky install"
   },
   "keywords": [],

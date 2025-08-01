@@ -11,7 +11,7 @@ const config = {
   DB_NAME: process.env.POSTGRES_DB,
   DB_USER: process.env.POSTGRES_USER,
   DB_PASSWORD: process.env.POSTGRES_PASSWORD,
-  DB_PORT: parseInt(process.env.POSTGRES_PORT || '5432'),
+  DB_PORT: parseInt(process.env.POSTGRES_PORT || '5432', 10),
 };
 
 export default config;
