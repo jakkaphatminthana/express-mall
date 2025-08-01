@@ -10,4 +10,8 @@ export class ProductService {
   async getProducts() {
     return await this.productRepository.findAll();
   }
+
+  async createProduct() {
+    return await this.productRepository.create();
+  }
 }

@@ -24,4 +24,13 @@ export class ProductRepository {
       currentPage: page,
     };
   }
+
+  async create() {
+    return await Product.create({
+      name: 'test create',
+      stock: 10,
+      price: 3000,
+      isActive: true,
+    });
+  }
 }

@@ -19,4 +19,16 @@ export class ProductController {
       data: result.data,
     });
   };
+
+  create = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    const result = await this.productService.createProduct();
+
+    res.status(201).json({
+      data: result,
+    });
+  };
 }

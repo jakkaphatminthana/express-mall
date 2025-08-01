@@ -10,13 +10,6 @@ async function main() {
     await sequelize.authenticate();
 
     // router
-    routes.get('/', (req, res) => {
-      res.status(200).json({
-        message: 'API is live',
-        status: 'OK',
-        timestamp: new Date().toISOString(),
-      });
-    });
     app.use('/api', routes);
 
     app.listen(config.PORT, () => {
