@@ -74,4 +74,21 @@ export class ProductController {
       sendError.internalServer(res, error);
     }
   };
+
+  delete: ControllerBaseFunctionType<{}, UpdateProductParamSchemaType, {}> =
+    async (req, res): Promise<void> => {
+      try {
+        const param = req.params;
+        const productId = parseInt(param.productId, 10);
+        await this.productService.deleteProduct(productId);
+
+        res.status(200).json({
+          success: true,
+          message: 'Delete Product successful.',
+        });
+      } catch (error) {
+        console.error('Error while delete: ', error);
+        sendError.internalServer(res, error);
+      }
+    };
 }

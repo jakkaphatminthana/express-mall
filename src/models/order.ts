@@ -71,20 +71,4 @@ Order.init(
   },
 );
 
-// // Associations
-// Order.hasOne(Member, {
-//   foreignKey: 'memberId',
-//   as: 'member',
-// });
-
-// Order.hasMany(OrderProduct, {
-//   foreignKey: 'orderId',
-//   as: 'orderProducts',
-// });
-
-// Order.hasOne(PointTransaction, {
-//   foreignKey: 'orderId',
-//   as: 'pointTransaction',
-// });
-
 export default Order;

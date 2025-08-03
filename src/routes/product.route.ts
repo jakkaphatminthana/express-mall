@@ -29,4 +29,10 @@ router.put(
   productController.update,
 );
 
+router.delete(
+  '/:productId',
+  validationSchema(UpdateProductParamSchema, 'params'),
+  productController.delete,
+);
+
 export default router;

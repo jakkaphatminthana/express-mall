@@ -109,17 +109,6 @@ OrderProduct.init(
   },
 );
 
-// // Associations
-// OrderProduct.belongsTo(Order, {
-//   foreignKey: 'orderId',
-//   as: 'order',
-// });
-
-// OrderProduct.belongsTo(Product, {
-//   foreignKey: 'productId',
-//   as: 'product',
-// });
-
 OrderProduct.belongsTo(Product, {
   foreignKey: 'productId',
   targetKey: 'id',

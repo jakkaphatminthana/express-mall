@@ -1,6 +1,5 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '@/config/connection';
-import { Order, OrderProduct } from '.';
 
 interface ProductAttributes {
   id: number;
@@ -99,11 +98,5 @@ Product.init(
     indexes: [{ fields: ['name'] }, { fields: ['isActive'] }],
   },
 );
-
-// // Associations
-// Product.hasMany(OrderProduct, {
-//   foreignKey: 'productId',
-//   as: 'product',
-// });
 
 export default Product;

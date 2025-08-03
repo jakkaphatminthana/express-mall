@@ -53,4 +53,21 @@ export class ProductService {
 
     return updatedData;
   }
+
+  async deleteProduct(id: number): Promise<void> {
+    const product = await this.productRepository.findById(id);
+    if (!product) {
+      throw createError.notFound('Product not found');
+    }
+
+    const canDelete = await this.productRepository.canDelete(id);
+    if (!canDelete) {
+      throw createError.badRequest(
+        'Cannot delete product that has order history',
+      );
+    }
+
+    const isDeleted = await this.productRepository.delete(id);
+    if (!isDeleted) throw new Error('Failed to delete product');
+  }
 }

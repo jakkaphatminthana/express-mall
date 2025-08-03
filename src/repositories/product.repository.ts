@@ -5,7 +5,8 @@ import {
   UpdateProductSchemaType,
 } from '@/validators/product.validator';
 
-import { Product } from '@/models';
+import { Product, OrderProduct } from '@/models';
+import { createError } from '@/utils/errorUtils';
 
 export class ProductRepository {
   async findAll(request: ProductSchemaType) {
@@ -29,11 +30,11 @@ export class ProductRepository {
     });
   }
 
-  async findById(id: number) {
+  async findById(id: number): Promise<Product | null> {
     return await Product.findByPk(id);
   }
 
-  async create(request: CreateProductSchemaType) {
+  async create(request: CreateProductSchemaType): Promise<Product> {
     return await Product.create({
       name: request.name,
       stock: request.stock,
@@ -42,7 +43,10 @@ export class ProductRepository {
     });
   }
 
-  async update(productId: number, request: UpdateProductSchemaType) {
+  async update(
+    productId: number,
+    request: UpdateProductSchemaType,
+  ): Promise<Product | null> {
     const [affectedRows] = await Product.update(
       {
         name: request.name,
@@ -58,5 +62,38 @@ export class ProductRepository {
     if (affectedRows === 0) return null;
 
     return this.findById(productId);
+  }
+
+  async delete(id: number): Promise<boolean> {
+    const [affectedRows] = await Product.update(
+      { isActive: false },
+      { where: { id }, returning: true },
+    );
+
+    return affectedRows > 0;
+  }
+
+  async canDelete(id: number): Promise<boolean> {
+    const orderCounts = await OrderProduct.count({ where: { productId: id } });
+    return orderCounts === 0;
+  }
+
+  async checkStock(id: number, requiredAmount: number): Promise<boolean> {
+    const product = await this.findById(id);
+    if (!product) return false;
+
+    return product.stock >= requiredAmount && product.isActive;
+  }
+
+  async reduceStock(id: number, amount: number): Promise<Product | null> {
+    const product = await this.findById(id);
+    if (!product) return null;
+
+    if (product.stock < amount) {
+      throw createError.badRequest('Insufficient stock');
+    }
+
+    const newStock = product.stock - amount;
+    return await this.update(id, { stock: newStock });
   }
 }
