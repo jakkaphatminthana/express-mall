@@ -1,7 +1,7 @@
 import { Op, WhereOptions } from 'sequelize';
 import {
   CreateProductSchemaType,
-  ProductSchemaType,
+  ProductQuerySchemaType,
   UpdateProductSchemaType,
 } from '@/validators/product.validator';
 
@@ -9,16 +9,24 @@ import { Product, OrderProduct } from '@/models';
 import { createError } from '@/utils/errorUtils';
 
 export class ProductRepository {
-  async findAll(request: ProductSchemaType) {
+  async findAll(request: ProductQuerySchemaType) {
     const page = request.page || 1;
     const pageSize = request.pageSize || 10;
     const offset = (page - 1) * pageSize;
 
-    let whereClause: WhereOptions<Product> = {};
+    let whereClause: WhereOptions = {};
 
+    // search
     if (request.search) {
       whereClause = {
         [Op.or]: [{ name: { [Op.iLike]: `%${request.search}%` } }],
+      };
+    }
+
+    // isActive
+    if (typeof request.isActive === 'boolean') {
+      whereClause = {
+        [Op.or]: [{ isActive: request.isActive }],
       };
     }
 

@@ -4,11 +4,12 @@ import { sendError } from '@/utils/errorUtils';
 import { ProductService } from '@/services/product.service';
 import {
   CreateProductSchemaType,
-  ProductSchemaType,
+  ProductQuerySchemaType,
   UpdateProductParamSchemaType,
   UpdateProductSchemaType,
 } from '@/validators/product.validator';
 import { ControllerBaseFunctionType } from './base.controller';
+import { toBoolean } from '@/utils/convert';
 
 export class ProductController {
   private productService: ProductService;
@@ -17,23 +18,26 @@ export class ProductController {
     this.productService = new ProductService();
   }
 
-  getProducts: ControllerBaseFunctionType<{}, {}, ProductSchemaType> = async (
-    req,
-    res,
-  ) => {
-    try {
-      const query = req.query;
-      const result = await this.productService.getProducts(query);
+  getProducts: ControllerBaseFunctionType<{}, {}, ProductQuerySchemaType> =
+    async (req, res) => {
+      try {
+        const query = req.query;
+        const isActive = toBoolean(req.query.isActive);
 
-      res.status(200).json({
-        success: true,
-        data: result,
-      });
-    } catch (error) {
-      console.error('Error while getProducts: ', error);
-      sendError.internalServer(res, error);
-    }
-  };
+        const result = await this.productService.getProducts({
+          ...query,
+          isActive,
+        });
+
+        res.status(200).json({
+          success: true,
+          data: result,
+        });
+      } catch (error) {
+        console.error('Error while getProducts: ', error);
+        sendError.internalServer(res, error);
+      }
+    };
 
   create: ControllerBaseFunctionType<CreateProductSchemaType, {}, {}> = async (
     req,

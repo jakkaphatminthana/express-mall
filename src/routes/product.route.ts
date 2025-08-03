@@ -4,7 +4,7 @@ import { ProductController } from '@/controllers/product.controller';
 import validationSchema from '@/middlewares/validation';
 import {
   CreateProductSchema,
-  ProductSchema,
+  ProductQuerySchema,
   UpdateProductParamSchema,
   UpdateProductSchema,
 } from '@/validators/product.validator';
@@ -14,7 +14,7 @@ const productController = new ProductController();
 
 router.get(
   '/',
-  validationSchema(ProductSchema, 'query'),
+  validationSchema(ProductQuerySchema, 'query'),
   productController.getProducts,
 );
 router.post(

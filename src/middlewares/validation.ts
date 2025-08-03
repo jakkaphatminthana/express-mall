@@ -10,10 +10,12 @@ export default function validationSchema(
   return (req: Request, res: Response, next: NextFunction) => {
     const originalData = req[source];
 
+    // สำหรับ query string ไม่ต้อง preprocess เพราะ Zod จะจัดการเอง
+    // สำหรับ body และ params ถึงจะ preprocess
     const parsedData =
       typeof originalData === 'object' &&
       originalData !== null &&
-      source !== 'params'
+      source === 'body' // เปลี่ยนเป็นเฉพาะ body เท่านั้น
         ? preprocessValues(originalData)
         : originalData;
 
@@ -32,6 +34,7 @@ export default function validationSchema(
     next();
   };
 }
+
 function preprocessValues(obj: Record<string, any>) {
   const result: Record<string, any> = {};
 

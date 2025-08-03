@@ -4,7 +4,7 @@ import { PaginationResponse } from '@/types/pagination';
 import { createError } from '@/utils/errorUtils';
 import {
   CreateProductSchemaType,
-  ProductSchemaType,
+  ProductQuerySchemaType,
   UpdateProductSchemaType,
 } from '@/validators/product.validator';
 
@@ -16,7 +16,7 @@ export class ProductService {
   }
 
   async getProducts(
-    request: ProductSchemaType,
+    request: ProductQuerySchemaType,
   ): Promise<PaginationResponse<Product>> {
     const { page = 1, pageSize = 10 } = request;
 

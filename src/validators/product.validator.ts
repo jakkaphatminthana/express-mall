@@ -1,6 +1,7 @@
 import { PaginationSchema } from '@/types/pagination';
 import z from 'zod';
 
+// create
 export const CreateProductSchema = z.object({
   name: z
     .string({ message: 'name is required' })
@@ -18,8 +19,14 @@ export const CreateProductSchema = z.object({
 });
 export type CreateProductSchemaType = z.infer<typeof CreateProductSchema>;
 
-export const ProductSchema = PaginationSchema;
-export type ProductSchemaType = z.infer<typeof ProductSchema>;
+// getAll
+export const ProductQuerySchema = PaginationSchema.extend({
+  isActive: z
+    .enum(['true', 'false'])
+    .transform((val) => val === 'true')
+    .optional(),
+});
+export type ProductQuerySchemaType = z.infer<typeof ProductQuerySchema>;
 
 // update body
 export const UpdateProductSchema = z.object({
