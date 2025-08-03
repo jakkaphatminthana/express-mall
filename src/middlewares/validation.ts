@@ -11,7 +11,9 @@ export default function validationSchema(
     const originalData = req[source];
 
     const parsedData =
-      typeof originalData === 'object' && originalData !== null
+      typeof originalData === 'object' &&
+      originalData !== null &&
+      source !== 'params'
         ? preprocessValues(originalData)
         : originalData;
 

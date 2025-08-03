@@ -1,9 +1,11 @@
 import { Product } from '@/models';
 import { ProductRepository } from '@/repositories/product.repository';
 import { PaginationResponse } from '@/types/pagination';
+import { createError } from '@/utils/errorUtils';
 import {
   CreateProductSchemaType,
   ProductSchemaType,
+  UpdateProductSchemaType,
 } from '@/validators/product.validator';
 
 export class ProductService {
@@ -33,5 +35,22 @@ export class ProductService {
 
   async createProduct(data: CreateProductSchemaType): Promise<Product> {
     return await this.productRepository.create(data);
+  }
+
+  async updateProduct(
+    productId: number,
+    data: UpdateProductSchemaType,
+  ): Promise<Product | null> {
+    const targetData = await this.productRepository.findById(productId);
+    if (!targetData) {
+      throw createError.notFound('Product not found');
+    }
+
+    const updatedData = await this.productRepository.update(productId, data);
+    if (!updatedData) {
+      throw createError.badRequest('Update product faild');
+    }
+
+    return updatedData;
   }
 }

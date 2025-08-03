@@ -5,6 +5,8 @@ import { ProductService } from '@/services/product.service';
 import {
   CreateProductSchemaType,
   ProductSchemaType,
+  UpdateProductParamSchemaType,
+  UpdateProductSchemaType,
 } from '@/validators/product.validator';
 import { ControllerBaseFunctionType } from './base.controller';
 
@@ -46,7 +48,29 @@ export class ProductController {
         data: result,
       });
     } catch (error) {
-      console.error('Error while getProducts: ', error);
+      console.error('Error while create: ', error);
+      sendError.internalServer(res, error);
+    }
+  };
+
+  update: ControllerBaseFunctionType<
+    UpdateProductSchemaType,
+    UpdateProductParamSchemaType,
+    {}
+  > = async (req, res): Promise<void> => {
+    try {
+      const param = req.params;
+      const body = req.body;
+
+      const productId = parseInt(param.productId, 10);
+      const result = await this.productService.updateProduct(productId, body);
+
+      res.status(200).json({
+        success: true,
+        data: result,
+      });
+    } catch (error) {
+      console.error('Error while update: ', error);
       sendError.internalServer(res, error);
     }
   };

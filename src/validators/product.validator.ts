@@ -20,3 +20,32 @@ export type CreateProductSchemaType = z.infer<typeof CreateProductSchema>;
 
 export const ProductSchema = PaginationSchema;
 export type ProductSchemaType = z.infer<typeof ProductSchema>;
+
+// update body
+export const UpdateProductSchema = z.object({
+  name: z
+    .string({ message: 'name is required' })
+    .max(100, { message: 'name must be less than 100 characters' })
+    .optional(),
+  description: z
+    .string()
+    .max(255, { message: 'description must be less than 255 characters' })
+    .optional(),
+  price: z
+    .number({ message: 'price is required' })
+    .min(0, { message: "price can't be nagative" })
+    .optional(),
+  stock: z
+    .number({ message: 'stock is required' })
+    .min(0, { message: "stock can't be nagative" })
+    .optional(),
+});
+export type UpdateProductSchemaType = z.infer<typeof UpdateProductSchema>;
+
+//update param
+export const UpdateProductParamSchema = z.object({
+  productId: z.string(),
+});
+export type UpdateProductParamSchemaType = z.infer<
+  typeof UpdateProductParamSchema
+>;

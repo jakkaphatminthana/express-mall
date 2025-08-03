@@ -1,13 +1,11 @@
-import { FindAndCountOptions, Op, WhereOptions } from 'sequelize';
-import {
-  Product,
-  ProductAttributes,
-  ProductCreationAttributes,
-} from '@/models/product';
+import { Op, WhereOptions } from 'sequelize';
 import {
   CreateProductSchemaType,
   ProductSchemaType,
+  UpdateProductSchemaType,
 } from '@/validators/product.validator';
+
+import { Product } from '@/models';
 
 export class ProductRepository {
   async findAll(request: ProductSchemaType) {
@@ -15,7 +13,7 @@ export class ProductRepository {
     const pageSize = request.pageSize || 10;
     const offset = (page - 1) * pageSize;
 
-    let whereClause: WhereOptions<ProductAttributes> = {};
+    let whereClause: WhereOptions<Product> = {};
 
     if (request.search) {
       whereClause = {
@@ -31,6 +29,10 @@ export class ProductRepository {
     });
   }
 
+  async findById(id: number) {
+    return await Product.findByPk(id);
+  }
+
   async create(request: CreateProductSchemaType) {
     return await Product.create({
       name: request.name,
@@ -38,5 +40,23 @@ export class ProductRepository {
       price: request.price,
       isActive: true,
     });
+  }
+
+  async update(productId: number, request: UpdateProductSchemaType) {
+    const [affectedRows] = await Product.update(
+      {
+        name: request.name,
+        stock: request.stock,
+        price: request.price,
+      },
+      {
+        where: { id: productId },
+        returning: true,
+      },
+    );
+
+    if (affectedRows === 0) return null;
+
+    return this.findById(productId);
   }
 }

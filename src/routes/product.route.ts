@@ -5,6 +5,8 @@ import validationSchema from '@/middlewares/validation';
 import {
   CreateProductSchema,
   ProductSchema,
+  UpdateProductParamSchema,
+  UpdateProductSchema,
 } from '@/validators/product.validator';
 
 const router = Router();
@@ -19,6 +21,12 @@ router.post(
   '/',
   validationSchema(CreateProductSchema, 'body'),
   productController.create,
+);
+router.put(
+  '/:productId',
+  validationSchema(UpdateProductParamSchema, 'params'),
+  validationSchema(UpdateProductSchema, 'body'),
+  productController.update,
 );
 
 export default router;
