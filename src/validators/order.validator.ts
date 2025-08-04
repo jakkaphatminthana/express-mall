@@ -3,7 +3,7 @@ import { CreateOrderProductSchema } from './orderProduct.validator';
 
 // create
 export const CreateOrderSchema = z.object({
-  memberId: z.number().optional(),
+  memberCode: z.string().optional(),
   orderProducts: z
     .array(CreateOrderProductSchema)
     .min(1, { message: 'orderProducts must has more than 1 item' }),

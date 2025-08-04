@@ -60,7 +60,7 @@ export class OrderService {
         // create Order
         const order = await this.orderRepository.create(
           {
-            memberId: request.memberId,
+            memberCode: request.memberCode,
             pointsEarn: totalPoints,
           },
           t,
@@ -79,8 +79,14 @@ export class OrderService {
         }
 
         // upsert member point
-        if (request.memberId) {
-          await this.memberRepository.upsertTotalPoint(request.memberId, t);
+        if (request.memberCode) {
+          const member = await this.memberRepository.findByCode(
+            request.memberCode,
+          );
+          if (!member) {
+            throw createError.badRequest('Member code is invalid');
+          }
+          await this.memberRepository.upsertTotalPoint(member.id, t);
         }
 
         return order;

@@ -15,6 +15,19 @@ export class MemberRepository {
     });
   }
 
+  async findByCode(code: string): Promise<Member | null> {
+    return await Member.findOne({
+      where: { code },
+      include: [
+        {
+          model: Order,
+          as: 'orders',
+          order: [['createdAt', 'DESC']],
+        },
+      ],
+    });
+  }
+
   async findAll(request: MembersQuerySchemaType) {
     const page = request.page || 1;
     const pageSize = request.pageSize || 10;

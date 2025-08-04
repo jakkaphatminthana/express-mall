@@ -1,9 +1,9 @@
-import { Order, OrderProduct, Product } from '@/models';
+import { Member, Order, OrderProduct, Product } from '@/models';
 import { Transaction } from 'sequelize';
 
 interface IOrder {
   pointsEarn?: number;
-  memberId?: number;
+  memberCode?: string;
 }
 
 export class OrderRepository {
@@ -26,9 +26,13 @@ export class OrderRepository {
   }
 
   async create(request: IOrder, transaction?: Transaction): Promise<Order> {
+    const member = request.memberCode
+      ? await Member.findOne({ where: { code: request.memberCode } })
+      : undefined;
+
     return await Order.create(
       {
-        memberId: request.memberId,
+        memberId: member?.id,
         pointsEarn: request.pointsEarn || 0,
       },
       { transaction },
@@ -36,7 +40,7 @@ export class OrderRepository {
   }
 
   async updatePoint(id: number, pointsEarn: number, t?: Transaction) {
-    const [affectedCount, affectedRows] = await Order.update(
+    const [_, affectedRows] = await Order.update(
       { pointsEarn },
       { where: { id }, returning: true, transaction: t },
     );
