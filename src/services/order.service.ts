@@ -1,5 +1,6 @@
 import { sequelize } from '@/config/connection';
 import { OrderProduct } from '@/models';
+import { MemberRepository } from '@/repositories/member.repository';
 import { OrderRepository } from '@/repositories/order.repository';
 import { OrderProductRepository } from '@/repositories/orderProduct.repository';
 import { ProductRepository } from '@/repositories/product.repository';
@@ -11,11 +12,13 @@ export class OrderService {
   private orderRepository: OrderRepository;
   private orderProductRepository: OrderProductRepository;
   private productRepository: ProductRepository;
+  private memberRepository: MemberRepository;
 
   constructor() {
     this.orderRepository = new OrderRepository();
     this.orderProductRepository = new OrderProductRepository();
     this.productRepository = new ProductRepository();
+    this.memberRepository = new MemberRepository();
   }
 
   async createOrder(request: CreateOrderSchemaType) {
@@ -73,6 +76,12 @@ export class OrderService {
         for (const item of orderProductData) {
           await this.productRepository.reduceStock(item.productId, item.amount);
         }
+
+        // upsert member point
+        if (request.memberId) {
+          await this.memberRepository.upsertTotalPoint(request.memberId, t);
+        }
+
         return order;
       });
     } catch (error) {

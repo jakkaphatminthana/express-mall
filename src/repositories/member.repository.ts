@@ -1,6 +1,6 @@
 import { Member, Order } from '@/models';
 import { MembersQuerySchemaType } from '@/validators/member.validator';
-import { Op, WhereOptions } from 'sequelize';
+import { Op, Transaction, WhereOptions } from 'sequelize';
 
 export class MemberRepository {
   async findById(id: number): Promise<Member | null> {
@@ -9,6 +9,7 @@ export class MemberRepository {
         {
           model: Order,
           as: 'orders',
+          order: [['createdAt', 'DESC']],
         },
       ],
     });
@@ -37,15 +38,26 @@ export class MemberRepository {
 
     return await Member.findAndCountAll({
       where: whereClause,
-      include: [
-        {
-          model: Order,
-          as: 'orders',
-        },
-      ],
       order: [['createdAt', 'ASC']],
       limit: pageSize,
       offset,
     });
+  }
+
+  async upsertTotalPoint(
+    memberId: number,
+    transaction?: Transaction,
+  ): Promise<number> {
+    const totalPointsResult = await Order.sum('pointsEarn', {
+      where: { memberId },
+      transaction,
+    });
+
+    const totalPoints = totalPointsResult || 0;
+
+    //update
+    await Member.update({ totalPoints }, { where: { id: memberId } });
+
+    return totalPoints;
   }
 }
