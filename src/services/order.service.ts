@@ -1,11 +1,12 @@
 import { sequelize } from '@/config/connection';
-import { OrderProduct } from '@/models';
 import { MemberRepository } from '@/repositories/member.repository';
 import { OrderRepository } from '@/repositories/order.repository';
 import { OrderProductRepository } from '@/repositories/orderProduct.repository';
 import { ProductRepository } from '@/repositories/product.repository';
+
 import { POINT_RATE } from '@/utils/constants';
-import { createError, HttpError } from '@/utils/errorUtils';
+import { createError } from '@/utils/errorUtils';
+
 import { CreateOrderSchemaType } from '@/validators/order.validator';
 
 export class OrderService {
@@ -35,7 +36,7 @@ export class OrderService {
           }
 
           if (!product.isActive) {
-            throw createError.notFound(
+            throw createError.badRequest(
               `Product "${item.productId}" is not active`,
             );
           }
@@ -45,7 +46,7 @@ export class OrderService {
             item.amount,
           );
           if (!hasStock) {
-            throw createError.notFound(
+            throw createError.badRequest(
               `Product "${product.name}" is insufficient stock`,
             );
           }
@@ -86,10 +87,11 @@ export class OrderService {
       });
     } catch (error) {
       console.error('Error while service createOrder:', error);
-      if (error instanceof HttpError) {
-        throw error;
-      }
-      throw createError.internal(undefined, error as any);
+      throw error;
     }
+  }
+
+  async findOne(id: number) {
+    return await this.orderRepository.findById(id);
   }
 }

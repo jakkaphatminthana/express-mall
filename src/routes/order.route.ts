@@ -1,6 +1,9 @@
 import { OrderController } from '@/controllers/order.controller';
 import validationSchema from '@/middlewares/validation';
-import { CreateOrderSchema } from '@/validators/order.validator';
+import {
+  CreateOrderSchema,
+  OrderIdParamSchema,
+} from '@/validators/order.validator';
 import { Router } from 'express';
 
 const router = Router();
@@ -10,6 +13,12 @@ router.post(
   '/',
   validationSchema(CreateOrderSchema, 'body'),
   orderController.createOrder,
+);
+
+router.get(
+  '/:orderId',
+  validationSchema(OrderIdParamSchema, 'params'),
+  orderController.findOne,
 );
 
 export default router;

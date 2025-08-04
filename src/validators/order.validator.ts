@@ -9,3 +9,8 @@ export const CreateOrderSchema = z.object({
     .min(1, { message: 'orderProducts must has more than 1 item' }),
 });
 export type CreateOrderSchemaType = z.infer<typeof CreateOrderSchema>;
+
+export const OrderIdParamSchema = z.object({
+  orderId: z.string().transform((val) => Number(val)),
+});
+export type OrderIdParamSchemaType = z.infer<typeof OrderIdParamSchema>;
