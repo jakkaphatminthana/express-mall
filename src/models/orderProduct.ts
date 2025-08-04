@@ -50,6 +50,7 @@ OrderProduct.init(
     orderId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      field: 'orderId',
       references: {
         model: 'Orders',
         key: 'id',
@@ -58,6 +59,7 @@ OrderProduct.init(
     productId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      field: 'productId',
       references: {
         model: 'Products',
         key: 'id',
@@ -116,6 +118,7 @@ OrderProduct.belongsTo(Product, {
 });
 
 Product.hasMany(OrderProduct, {
+  foreignKey: 'productId',
   as: 'orderProducts',
 });
 
@@ -126,6 +129,7 @@ OrderProduct.belongsTo(Order, {
 });
 
 Order.hasMany(OrderProduct, {
+  foreignKey: 'orderId',
   as: 'orderProducts',
 });
 

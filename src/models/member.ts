@@ -99,6 +99,7 @@ Order.belongsTo(Member, {
 });
 
 Member.hasMany(Order, {
+  foreignKey: 'memberId',
   as: 'orders',
 });
 

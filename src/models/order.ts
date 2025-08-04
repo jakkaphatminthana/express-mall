@@ -45,6 +45,7 @@ Order.init(
     memberId: {
       type: DataTypes.INTEGER,
       allowNull: true,
+      field: 'memberId',
       references: {
         model: 'Members',
         key: 'id',
