@@ -51,7 +51,7 @@ export type UpdateProductSchemaType = z.infer<typeof UpdateProductSchema>;
 
 //update param
 export const UpdateProductParamSchema = z.object({
-  productId: z.string(),
+  productId: z.string().transform((val) => Number(val)),
 });
 export type UpdateProductParamSchemaType = z.infer<
   typeof UpdateProductParamSchema

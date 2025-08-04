@@ -1,6 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
 import { sendError } from '@/utils/errorUtils';
-
 import { ProductService } from '@/services/product.service';
 import {
   CreateProductSchemaType,
@@ -64,10 +62,12 @@ export class ProductController {
   > = async (req, res): Promise<void> => {
     try {
       const param = req.params;
-      const body = req.body;
+      const body = req.body as UpdateProductSchemaType;
 
-      const productId = parseInt(param.productId, 10);
-      const result = await this.productService.updateProduct(productId, body);
+      const result = await this.productService.updateProduct(
+        param.productId,
+        body,
+      );
 
       res.status(200).json({
         success: true,
@@ -83,8 +83,7 @@ export class ProductController {
     async (req, res): Promise<void> => {
       try {
         const param = req.params;
-        const productId = parseInt(param.productId, 10);
-        await this.productService.deleteProduct(productId);
+        await this.productService.deleteProduct(param.productId);
 
         res.status(200).json({
           success: true,
