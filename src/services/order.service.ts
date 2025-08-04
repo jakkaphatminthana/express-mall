@@ -1,60 +1,85 @@
 import { sequelize } from '@/config/connection';
+import { OrderProduct } from '@/models';
 import { OrderRepository } from '@/repositories/order.repository';
 import { OrderProductRepository } from '@/repositories/orderProduct.repository';
+import { ProductRepository } from '@/repositories/product.repository';
 import { POINT_RATE } from '@/utils/constants';
-import { createError } from '@/utils/errorUtils';
+import { createError, HttpError } from '@/utils/errorUtils';
 import { CreateOrderSchemaType } from '@/validators/order.validator';
 
 export class OrderService {
   private orderRepository: OrderRepository;
   private orderProductRepository: OrderProductRepository;
+  private productRepository: ProductRepository;
 
   constructor() {
     this.orderRepository = new OrderRepository();
     this.orderProductRepository = new OrderProductRepository();
+    this.productRepository = new ProductRepository();
   }
 
   async createOrder(request: CreateOrderSchemaType) {
     try {
       return await sequelize.transaction(async (t) => {
+        let totalPoints = 0;
+        let totalOrderPrice = 0;
+
+        // check product
+        for (const item of request.orderProducts) {
+          const product = await this.productRepository.findById(item.productId);
+          if (!product) {
+            throw createError.notFound(`Product "${item.productId}" not found`);
+          }
+
+          if (!product.isActive) {
+            throw createError.notFound(
+              `Product "${item.productId}" is not active`,
+            );
+          }
+
+          const hasStock = await this.productRepository.checkStock(
+            item.productId,
+            item.amount,
+          );
+          if (!hasStock) {
+            throw createError.notFound(
+              `Product "${product.name}" is insufficient stock`,
+            );
+          }
+
+          const priceTotal = product.price * item.amount;
+          totalOrderPrice += priceTotal;
+        }
+
+        totalPoints = Math.floor(totalOrderPrice / POINT_RATE);
+
         // create Order
         const order = await this.orderRepository.create(
           {
             memberId: request.memberId,
-            pointsEarn: 0,
+            pointsEarn: totalPoints,
           },
           t,
         );
-        await order.save({ transaction: t });
 
         // create OrderProduct
-        const orderProducts = await this.orderProductRepository.create(
+        const orderProductData = await this.orderProductRepository.create(
           order.id,
           request.orderProducts,
           t,
         );
 
-        // update point
-        const totalPrice = orderProducts
-          .map((item) => item.totalPrice)
-          .reduce((sum, price) => sum + price, 0);
-
-        const pointsEarn = Math.floor(totalPrice / POINT_RATE);
-
-        const orderUpdated = await this.orderRepository.updatePoint(
-          order.id,
-          pointsEarn,
-          t,
-        );
-
-        if (!orderUpdated) {
-          throw createError.badRequest('Error while updating order points');
+        // reduce stock for all product
+        for (const item of orderProductData) {
+          await this.productRepository.reduceStock(item.productId, item.amount);
         }
-
-        return orderUpdated;
+        return order;
       });
     } catch (error) {
       console.error('Error while service createOrder:', error);
+      if (error instanceof HttpError) {
+        throw error;
+      }
       throw createError.internal(undefined, error as any);
     }
   }
