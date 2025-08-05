@@ -20,12 +20,7 @@ export class ProductController {
     async (req, res) => {
       try {
         const query = req.query;
-        const isActive = toBoolean(req.query.isActive);
-
-        const result = await this.productService.getProducts({
-          ...query,
-          isActive,
-        });
+        const result = await this.productService.getProducts(query);
 
         res.status(200).json({
           success: true,

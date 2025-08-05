@@ -12,9 +12,8 @@ export const MembersQuerySchema = PaginationSchema.omit({
   search: true,
 }).extend({
   code: z.string().optional(),
-  isActive: z
-    .enum(['true', 'false'])
-    .transform((val) => val === 'true')
+  isActive: z.coerce
+    .boolean({ message: 'isActive must be a valid boolean (true/false)' })
     .optional(),
 });
 export type MembersQuerySchemaType = z.infer<typeof MembersQuerySchema>;

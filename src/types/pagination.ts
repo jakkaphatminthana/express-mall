@@ -10,23 +10,15 @@ export interface PaginationResponse<T> {
 }
 
 export const PaginationSchema = z.object({
-  page: z
-    .preprocess((val) => {
-      if (typeof val === 'string') return val;
-      if (typeof val === 'number') return val.toString();
-      return val;
-    }, z.string())
-    .transform((val) => Number(val))
-    .refine((val) => val > 0, { message: 'page must be a positive number' })
+  page: z.coerce
+    .number({ message: 'page must be a positive number' })
+    .int()
+    .positive()
     .optional(),
-  pageSize: z
-    .preprocess((val) => {
-      if (typeof val === 'string') return val;
-      if (typeof val === 'number') return val.toString();
-      return val;
-    }, z.string())
-    .transform((val) => Number(val))
-    .refine((val) => val > 0, { message: 'pageSize must be a positive number' })
+  pageSize: z.coerce
+    .number({ message: 'pageSize must be a positive number' })
+    .int()
+    .positive()
     .optional(),
   search: z.string().optional(),
 });

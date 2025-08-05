@@ -21,9 +21,8 @@ export type CreateProductSchemaType = z.infer<typeof CreateProductSchema>;
 
 // getAll
 export const ProductQuerySchema = PaginationSchema.extend({
-  isActive: z
-    .enum(['true', 'false'])
-    .transform((val) => val === 'true')
+  isActive: z.coerce
+    .boolean({ message: 'isActive must be a valid boolean (true/false)' })
     .optional(),
 });
 export type ProductQuerySchemaType = z.infer<typeof ProductQuerySchema>;
