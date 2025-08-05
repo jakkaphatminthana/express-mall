@@ -14,20 +14,16 @@ export class ProductRepository {
     const pageSize = request.pageSize || 10;
     const offset = (page - 1) * pageSize;
 
-    let whereClause: WhereOptions = {};
+    let whereClause: WhereOptions<Product> = {};
 
     // search
     if (request.search) {
-      whereClause = {
-        [Op.or]: [{ name: { [Op.iLike]: `%${request.search}%` } }],
-      };
+      whereClause.name = { [Op.iLike]: `%${request.search}%` };
     }
 
     // isActive
     if (typeof request.isActive === 'boolean') {
-      whereClause = {
-        [Op.or]: [{ isActive: request.isActive }],
-      };
+      whereClause.isActive = request.isActive;
     }
 
     return await Product.findAndCountAll({

@@ -37,16 +37,12 @@ export class MemberRepository {
 
     //search
     if (request.code) {
-      whereClause = {
-        [Op.or]: [{ code: { [Op.iLike]: `${request.code}%` } }],
-      };
+      whereClause.code = { [Op.iLike]: `${request.code}%` };
     }
 
     // isActive
     if (typeof request.isActive === 'boolean') {
-      whereClause = {
-        [Op.or]: [{ isActive: request.isActive }],
-      };
+      whereClause.isActive = request.isActive;
     }
 
     return await Member.findAndCountAll({
