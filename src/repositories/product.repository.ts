@@ -94,7 +94,7 @@ export class ProductRepository {
     if (!product) return null;
 
     if (product.stock < amount) {
-      throw createError.badRequest('Insufficient stock');
+      throw createError.conflict('Insufficient stock');
     }
 
     const newStock = product.stock - amount;

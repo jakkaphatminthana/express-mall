@@ -21,9 +21,12 @@ export default function validationSchema(
 
     if (!result.success) {
       res.status(400).json({
-        code: 'ValidationError',
-        message: 'Validation failed',
-        errors: result.error.flatten().fieldErrors,
+        success: false,
+        error: {
+          code: 400,
+          message: 'Validation failed',
+          details: result.error.flatten().fieldErrors,
+        },
       });
       return;
     }

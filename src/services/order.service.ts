@@ -51,7 +51,7 @@ export class OrderService {
             item.amount,
           );
           if (!hasStock) {
-            throw createError.badRequest(
+            throw createError.conflict(
               `Product "${product.name}" is insufficient stock`,
             );
           }
