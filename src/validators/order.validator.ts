@@ -26,8 +26,8 @@ export const OrderIdParamSchema = z.object({
 export type OrderIdParamSchemaType = z.infer<typeof OrderIdParamSchema>;
 
 // order all
-export const OrdersQuerySchema = PaginationSchema.omit({ search: true }).extend(
-  {
+export const OrdersQuerySchema = PaginationSchema.omit({ search: true })
+  .extend({
     memberId: z
       .string()
       .refine((val) => !isNaN(Number(val)), {
@@ -43,6 +43,19 @@ export const OrdersQuerySchema = PaginationSchema.omit({ search: true }).extend(
       .string()
       .regex(dateRegex, { message: 'endDate must be in YYYY-MM-DD format' })
       .optional(),
-  },
-);
+  })
+  .refine(
+    (query) => {
+      if (query.startDate && query.endDate) {
+        const start = new Date(query.startDate);
+        const end = new Date(query.endDate);
+        return start <= end;
+      }
+      return true;
+    },
+    {
+      message: 'startDate must be before or equal to endDate',
+      path: ['startDate'],
+    },
+  );
 export type OrdersQuerySchemaType = z.infer<typeof OrdersQuerySchema>;
