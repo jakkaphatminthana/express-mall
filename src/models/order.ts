@@ -1,6 +1,5 @@
 import { Association, DataTypes, Model, Optional } from 'sequelize';
 import { sequelize } from '@/config/connection';
-import { Member, OrderProduct, PointTransaction, Product } from '.';
 
 interface OrderAttributes {
   id: number;

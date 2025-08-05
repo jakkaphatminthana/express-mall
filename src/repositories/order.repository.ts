@@ -49,7 +49,15 @@ export class OrderRepository {
 
     return await Order.findAndCountAll({
       where: whereClause,
-      include: [{ model: OrderProduct, as: 'orderProducts' }],
+      include: [
+        {
+          model: OrderProduct,
+          as: 'orderProducts',
+          attributes: ['id', 'productId', 'amount', 'unitPrice', 'totalPrice'],
+          include: [{ model: Product, as: 'product', attributes: ['name'] }],
+        },
+        { model: Member, as: 'member', attributes: ['code'] },
+      ],
       order: [['createdAt', 'DESC']],
       limit: pageSize,
       offset,

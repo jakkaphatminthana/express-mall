@@ -85,15 +85,4 @@ PointTransaction.init(
   },
 );
 
-// // Associations
-// PointTransaction.belongsTo(Member, {
-//   foreignKey: 'memberId',
-//   as: 'member',
-// });
-
-// PointTransaction.belongsTo(Order, {
-//   foreignKey: 'orderId',
-//   as: 'order',
-// });
-
 export default PointTransaction;

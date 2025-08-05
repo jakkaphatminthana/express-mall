@@ -6,6 +6,7 @@ import {
   OrdersQuerySchemaType,
 } from '@/validators/order.validator';
 import { sendError } from '@/utils/errorUtils';
+import { toOrderDto } from '@/dto/order.dto';
 
 export class OrderController {
   private orderService: OrderService;

@@ -84,14 +84,6 @@ Member.init(
   },
 );
 
-// Associations
-// Member.hasMany(Order, { foreignKey: 'memberId', as: 'orders' });
-
-// Member.hasMany(PointTransaction, {
-//   foreignKey: 'memberId',
-//   as: 'pointTransactions',
-// });
-
 Order.belongsTo(Member, {
   foreignKey: 'memberId',
   targetKey: 'id',

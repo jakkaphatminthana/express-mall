@@ -1,4 +1,5 @@
 import { sequelize } from '@/config/connection';
+import { toOrderDto } from '@/dto/order.dto';
 import { MemberRepository } from '@/repositories/member.repository';
 import { OrderRepository } from '@/repositories/order.repository';
 import { OrderProductRepository } from '@/repositories/orderProduct.repository';
@@ -110,8 +111,12 @@ export class OrderService {
     const { rows, count } = await this.orderRepository.findAll(request);
     const totalPage = Math.ceil(count / pageSize);
 
+    const ordersDto = rows.map((order) =>
+      toOrderDto(order.toJSON ? order.toJSON() : order),
+    );
+
     return {
-      data: rows.map((item) => item.toJSON()),
+      data: ordersDto,
       pagination: {
         currentPage: Number(page),
         totalPage,
