@@ -1,11 +1,10 @@
-import { MemberService } from '@/services/member.service';
 import { ControllerBaseFunctionType } from './base.controller';
+import { MemberService } from '@/services/member.service';
 import { sendError } from '@/utils/errorUtils';
 import {
   MemberParamSchemaType,
   MembersQuerySchemaType,
 } from '@/validators/member.validator';
-import { toBoolean } from '@/utils/convert';
 
 export class MemberController {
   private memberSerivce: MemberService;

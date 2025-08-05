@@ -1,6 +1,6 @@
+import { Op, Transaction, WhereOptions } from 'sequelize';
 import { Member, Order } from '@/models';
 import { MembersQuerySchemaType } from '@/validators/member.validator';
-import { Op, Transaction, WhereOptions } from 'sequelize';
 
 export class MemberRepository {
   async findById(id: number): Promise<Member | null> {

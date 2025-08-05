@@ -1,3 +1,4 @@
+import { ControllerBaseFunctionType } from './base.controller';
 import { sendError } from '@/utils/errorUtils';
 import { ProductService } from '@/services/product.service';
 import {
@@ -6,8 +7,6 @@ import {
   UpdateProductParamSchemaType,
   UpdateProductSchemaType,
 } from '@/validators/product.validator';
-import { ControllerBaseFunctionType } from './base.controller';
-import { toBoolean } from '@/utils/convert';
 
 export class ProductController {
   private productService: ProductService;

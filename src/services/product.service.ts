@@ -1,7 +1,8 @@
 import { Product } from '@/models';
+import { createError } from '@/utils/errorUtils';
+
 import { ProductRepository } from '@/repositories/product.repository';
 import { PaginationResponse } from '@/types/pagination';
-import { createError } from '@/utils/errorUtils';
 import {
   CreateProductSchemaType,
   ProductQuerySchemaType,

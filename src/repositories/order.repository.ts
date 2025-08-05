@@ -1,6 +1,6 @@
+import { Op, Transaction, WhereOptions } from 'sequelize';
 import { Member, Order, OrderProduct, Product } from '@/models';
 import { OrdersQuerySchemaType } from '@/validators/order.validator';
-import { Op, Transaction, WhereOptions } from 'sequelize';
 
 interface IOrder {
   pointsEarn?: number;

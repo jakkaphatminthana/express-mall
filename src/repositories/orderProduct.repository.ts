@@ -1,5 +1,5 @@
-import { OrderProduct, Product } from '@/models';
 import { Transaction } from 'sequelize';
+import { OrderProduct, Product } from '@/models';
 import { createError } from '@/utils/errorUtils';
 import { CreateOrderProductSchemaType } from '@/validators/orderProduct.validator';
 

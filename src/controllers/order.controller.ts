@@ -1,12 +1,11 @@
-import { OrderService } from '@/services/order.service';
 import { ControllerBaseFunctionType } from './base.controller';
+import { OrderService } from '@/services/order.service';
 import {
   CreateOrderSchemaType,
   OrderIdParamSchemaType,
   OrdersQuerySchemaType,
 } from '@/validators/order.validator';
 import { sendError } from '@/utils/errorUtils';
-import { toOrderDto } from '@/dto/order.dto';
 
 export class OrderController {
   private orderService: OrderService;
