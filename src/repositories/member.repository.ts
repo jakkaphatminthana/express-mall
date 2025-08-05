@@ -37,7 +37,7 @@ export class MemberRepository {
 
     //search
     if (request.code) {
-      whereClause.code = { [Op.iLike]: `${request.code}%` };
+      whereClause.code = { [Op.iLike]: `%${request.code}%` };
     }
 
     // isActive

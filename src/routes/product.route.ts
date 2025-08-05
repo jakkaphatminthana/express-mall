@@ -16,8 +16,7 @@ const productController = new ProductController();
  * @swagger
  * /api/products:
  *   get:
- *     tags:
- *       - Products
+ *     tags: [Products]
  *     summary: Fetch all products
  *     requestBody:
  *       required: false

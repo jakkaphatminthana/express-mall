@@ -50,7 +50,12 @@ export type UpdateProductSchemaType = z.infer<typeof UpdateProductSchema>;
 
 //update param
 export const UpdateProductParamSchema = z.object({
-  productId: z.string().transform((val) => Number(val)),
+  productId: z
+    .string()
+    .refine((val) => !isNaN(Number(val)), {
+      message: 'productId must be number',
+    })
+    .transform((val) => Number(val)),
 });
 export type UpdateProductParamSchemaType = z.infer<
   typeof UpdateProductParamSchema

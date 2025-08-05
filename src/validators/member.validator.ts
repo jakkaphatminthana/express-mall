@@ -3,7 +3,12 @@ import z from 'zod';
 
 // getOne
 export const MemberParamSchema = z.object({
-  memberId: z.string().transform((val) => Number(val)),
+  memberId: z
+    .string()
+    .refine((val) => !isNaN(Number(val)), {
+      message: 'memberId must be number',
+    })
+    .transform((val) => Number(val)),
 });
 export type MemberParamSchemaType = z.infer<typeof MemberParamSchema>;
 

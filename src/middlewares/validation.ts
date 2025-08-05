@@ -76,7 +76,13 @@ function isObject(value: unknown): value is Record<string, any> {
 
 function tryParseJson(value: string): any {
   try {
-    return JSON.parse(value);
+    const parsed = JSON.parse(value);
+    // return เฉพาะถ้าเป็น object หรือ array เท่านั้น
+    if (typeof parsed === 'object') {
+      return parsed;
+    }
+    // ถ้าไม่ใช่ object/array ก็คืนค่า string เดิม
+    return value;
   } catch {
     return value;
   }

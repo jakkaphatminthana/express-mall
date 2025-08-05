@@ -17,7 +17,7 @@
     "db-migrate:generate": "sequelize-cli migration:generate --name",
     "db-seed:generate": "sequelize-cli seed:generate --name",
     "prepare": "husky install",
-    "fmt": "prettier --write \"src/**/*.{ts,js,json,md}\""
+    "fmt": "prettier --write \"src/**/*.ts\""
   },
   "keywords": [],
   "author": "",

@@ -16,7 +16,12 @@ export type CreateOrderSchemaType = z.infer<typeof CreateOrderSchema>;
 
 // orderId param
 export const OrderIdParamSchema = z.object({
-  orderId: z.string().transform((val) => Number(val)),
+  orderId: z
+    .string()
+    .refine((val) => !isNaN(Number(val)), {
+      message: 'orderId must be number',
+    })
+    .transform((val) => Number(val)),
 });
 export type OrderIdParamSchemaType = z.infer<typeof OrderIdParamSchema>;
 
@@ -25,6 +30,9 @@ export const OrdersQuerySchema = PaginationSchema.omit({ search: true }).extend(
   {
     memberId: z
       .string()
+      .refine((val) => !isNaN(Number(val)), {
+        message: 'memberId must be number',
+      })
       .transform((val) => Number(val))
       .optional(),
     startDate: z
