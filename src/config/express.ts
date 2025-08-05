@@ -3,10 +3,12 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import helmet from 'helmet';
+import swaggerUi from 'swagger-ui-express';
 
 import type { CorsOptions } from 'cors';
 
 import config from '@/config';
+import swaggerSpec from './swagger';
 
 const app = express();
 
@@ -48,5 +50,7 @@ app.use(
 
 // Enhance security HTTP header
 app.use(helmet());
+
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 export default app;
