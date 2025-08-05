@@ -43,7 +43,7 @@ export class MemberController {
       const isActive = toBoolean(req.query.isActive);
 
       const results = await this.memberSerivce.findAll({ ...query, isActive });
-      res.status(200).json({ success: true, data: results });
+      res.status(200).json({ success: true, ...results });
     } catch (error) {
       console.error('Error while findAll: ', error);
       sendError.internalServer(res, error);

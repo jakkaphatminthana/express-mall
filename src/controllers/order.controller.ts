@@ -3,6 +3,7 @@ import { ControllerBaseFunctionType } from './base.controller';
 import {
   CreateOrderSchemaType,
   OrderIdParamSchemaType,
+  OrdersQuerySchemaType,
 } from '@/validators/order.validator';
 import { sendError } from '@/utils/errorUtils';
 
@@ -42,6 +43,21 @@ export class OrderController {
       res.status(200).json({ success: true, data: result });
     } catch (error) {
       console.error('Error while findOne: ', error);
+      sendError.internalServer(res, error);
+    }
+  };
+
+  findAll: ControllerBaseFunctionType<{}, {}, OrdersQuerySchemaType> = async (
+    req,
+    res,
+  ) => {
+    try {
+      const query = req.query;
+      const result = await this.orderService.findAll(query);
+
+      res.status(200).json({ success: true, ...result });
+    } catch (error) {
+      console.error('Error while findAll: ', error);
       sendError.internalServer(res, error);
     }
   };

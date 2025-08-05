@@ -29,7 +29,7 @@ export class ProductController {
 
         res.status(200).json({
           success: true,
-          data: result,
+          ...result,
         });
       } catch (error) {
         console.error('Error while getProducts: ', error);

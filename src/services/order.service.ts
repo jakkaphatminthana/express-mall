@@ -7,7 +7,10 @@ import { ProductRepository } from '@/repositories/product.repository';
 import { POINT_RATE } from '@/utils/constants';
 import { createError } from '@/utils/errorUtils';
 
-import { CreateOrderSchemaType } from '@/validators/order.validator';
+import {
+  CreateOrderSchemaType,
+  OrdersQuerySchemaType,
+} from '@/validators/order.validator';
 
 export class OrderService {
   private orderRepository: OrderRepository;
@@ -99,5 +102,21 @@ export class OrderService {
 
   async findOne(id: number) {
     return await this.orderRepository.findById(id);
+  }
+
+  async findAll(request: OrdersQuerySchemaType) {
+    const { page = 1, pageSize = 10 } = request;
+
+    const { rows, count } = await this.orderRepository.findAll(request);
+    const totalPage = Math.ceil(count / pageSize);
+
+    return {
+      data: rows.map((item) => item.toJSON()),
+      pagination: {
+        currentPage: Number(page),
+        totalPage,
+        totalItem: count,
+      },
+    };
   }
 }
