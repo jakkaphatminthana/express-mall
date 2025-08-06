@@ -1,6 +1,7 @@
 import { MemberController } from '@/controllers/member.controller';
 import validationSchema from '@/middlewares/validation';
 import {
+  CreateMemberSchema,
   MemberParamSchema,
   MembersQuerySchema,
 } from '@/validators/member.validator';
@@ -25,6 +26,12 @@ router.delete(
   '/:memberId',
   validationSchema(MemberParamSchema, 'params'),
   memberController.delete,
+);
+
+router.post(
+  '/',
+  validationSchema(CreateMemberSchema, 'body'),
+  memberController.create,
 );
 
 export default router;

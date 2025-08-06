@@ -3,6 +3,7 @@ import { ControllerBaseFunctionType } from './base.controller';
 import { MemberService } from '@/services/member.service';
 import { sendError } from '@/utils/errorUtils';
 import {
+  CreateMemberSchemaType,
   MemberParamSchemaType,
   MembersQuerySchemaType,
 } from '@/validators/member.validator';
@@ -47,6 +48,21 @@ export class MemberController {
       res.status(200).json({ success: true, ...results });
     } catch (error) {
       console.error('Error while findAll: ', error);
+      sendError.internalServer(res, error);
+    }
+  };
+
+  create: ControllerBaseFunctionType<CreateMemberSchemaType, {}, {}> = async (
+    req,
+    res,
+  ) => {
+    try {
+      const body = req.body as CreateMemberSchemaType;
+      const data = await this.memberSerivce.create(body);
+
+      res.status(200).json({ success: true, data });
+    } catch (error) {
+      console.error('Error while create: ', error);
       sendError.internalServer(res, error);
     }
   };

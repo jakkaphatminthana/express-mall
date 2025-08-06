@@ -1,6 +1,9 @@
-import { Op, Transaction, where, WhereOptions } from 'sequelize';
+import { Op, Transaction, WhereOptions } from 'sequelize';
 import { Member, Order, OrderProduct, Product } from '@/models';
-import { MembersQuerySchemaType } from '@/validators/member.validator';
+import {
+  CreateMemberSchemaType,
+  MembersQuerySchemaType,
+} from '@/validators/member.validator';
 
 export class MemberRepository {
   async findById(id: number): Promise<Member | null> {
@@ -35,6 +38,10 @@ export class MemberRepository {
     });
   }
 
+  async findOne(query: any) {
+    return Member.findOne(query);
+  }
+
   async findAll(request: MembersQuerySchemaType) {
     const page = request.page || 1;
     const pageSize = request.pageSize || 10;
@@ -57,6 +64,14 @@ export class MemberRepository {
       order: [['createdAt', 'ASC']],
       limit: pageSize,
       offset,
+    });
+  }
+
+  async create(request: CreateMemberSchemaType): Promise<Member> {
+    return await Member.create({
+      code: request.code!,
+      totalPoints: request.defaultPoints || 0,
+      isActive: true,
     });
   }
 

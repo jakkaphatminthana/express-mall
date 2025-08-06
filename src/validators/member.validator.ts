@@ -22,3 +22,13 @@ export const MembersQuerySchema = PaginationSchema.omit({
     .optional(),
 });
 export type MembersQuerySchemaType = z.infer<typeof MembersQuerySchema>;
+
+// create
+export const CreateMemberSchema = z.object({
+  code: z.string().optional(),
+  defaultPoints: z
+    .number()
+    .positive({ message: 'defaultPoints must be not negative' })
+    .optional(),
+});
+export type CreateMemberSchemaType = z.infer<typeof CreateMemberSchema>;
