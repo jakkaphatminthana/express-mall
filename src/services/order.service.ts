@@ -116,12 +116,8 @@ export class OrderService {
     const { rows, count } = await this.orderRepository.findAll(request);
     const totalPage = Math.ceil(count / pageSize);
 
-    const ordersDto = rows.map((order) =>
-      toOrderDto(order.toJSON ? order.toJSON() : order),
-    );
-
     return {
-      data: ordersDto,
+      data: rows.map((item) => item.toJSON()),
       pagination: {
         currentPage: Number(page),
         totalPage,

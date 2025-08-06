@@ -6,6 +6,7 @@ import {
   OrdersQuerySchemaType,
 } from '@/validators/order.validator';
 import { sendError } from '@/utils/errorUtils';
+import { toOrderDto } from '@/dto/order.dto';
 
 export class OrderController {
   private orderService: OrderService;
@@ -55,7 +56,11 @@ export class OrderController {
       const query = req.query;
       const result = await this.orderService.findAll(query);
 
-      res.status(200).json({ success: true, ...result });
+      const formattedListData = result.data.map((item) => toOrderDto(item));
+
+      res
+        .status(200)
+        .json({ success: true, ...result, data: formattedListData });
     } catch (error) {
       console.error('Error while findAll: ', error);
       sendError.internalServer(res, error);
