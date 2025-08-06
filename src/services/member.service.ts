@@ -1,6 +1,7 @@
 import { Member } from '@/models';
 import { MemberRepository } from '@/repositories/member.repository';
 import { PaginationResponse } from '@/types/pagination';
+import { createError } from '@/utils/errorUtils';
 import { MembersQuerySchemaType } from '@/validators/member.validator';
 
 export class MemberService {
@@ -30,5 +31,19 @@ export class MemberService {
         totalItem: count,
       },
     };
+  }
+
+  async delete(id: number): Promise<void> {
+    const target = await this.findOneById(id);
+
+    if (!target) {
+      throw createError.notFound('Member is not found');
+    }
+
+    if (!target.isActive) {
+      throw createError.conflict('This member already deleted');
+    }
+
+    await this.memberRepository.delete(id);
   }
 }

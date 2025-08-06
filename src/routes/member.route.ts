@@ -21,4 +21,10 @@ router.get(
   memberController.findOne,
 );
 
+router.delete(
+  '/:memberId',
+  validationSchema(MemberParamSchema, 'params'),
+  memberController.delete,
+);
+
 export default router;

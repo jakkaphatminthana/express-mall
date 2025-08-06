@@ -61,6 +61,10 @@ export class ProductService {
       throw createError.notFound('Product not found');
     }
 
+    if (!product.isActive) {
+      throw createError.conflict('This product already deleted');
+    }
+
     const canDelete = await this.productRepository.canDelete(id);
     if (!canDelete) {
       throw createError.badRequest(

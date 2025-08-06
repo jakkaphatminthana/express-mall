@@ -1,4 +1,4 @@
-import { Op, Transaction, WhereOptions } from 'sequelize';
+import { Op, Transaction, where, WhereOptions } from 'sequelize';
 import { Member, Order, OrderProduct, Product } from '@/models';
 import { MembersQuerySchemaType } from '@/validators/member.validator';
 
@@ -75,5 +75,9 @@ export class MemberRepository {
     await Member.update({ totalPoints }, { where: { id: memberId } });
 
     return totalPoints;
+  }
+
+  async delete(id: number): Promise<void> {
+    await Member.update({ isActive: false }, { where: { id } });
   }
 }

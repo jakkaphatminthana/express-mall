@@ -91,6 +91,10 @@ export class OrderService {
           if (!member) {
             throw createError.badRequest('Member code is invalid');
           }
+          if (!member.isActive) {
+            throw createError.conflict('Member is not available');
+          }
+
           await this.memberRepository.upsertTotalPoint(member.id, t);
         }
 

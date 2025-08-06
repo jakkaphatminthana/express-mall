@@ -50,4 +50,22 @@ export class MemberController {
       sendError.internalServer(res, error);
     }
   };
+
+  delete: ControllerBaseFunctionType<{}, MemberParamSchemaType, {}> = async (
+    req,
+    res,
+  ) => {
+    try {
+      const params = req.params;
+      await this.memberSerivce.delete(params.memberId);
+
+      res.status(200).json({
+        success: true,
+        message: 'Delete Member successful.',
+      });
+    } catch (error) {
+      console.error('Error while delete: ', error);
+      sendError.internalServer(res, error);
+    }
+  };
 }
