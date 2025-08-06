@@ -1,3 +1,4 @@
+import { toMemberDto } from '@/dto/member.dto';
 import { ControllerBaseFunctionType } from './base.controller';
 import { MemberService } from '@/services/member.service';
 import { sendError } from '@/utils/errorUtils';
@@ -26,7 +27,9 @@ export class MemberController {
         return;
       }
 
-      res.status(200).json({ success: true, data: result });
+      const formattedData = toMemberDto(result);
+
+      res.status(200).json({ success: true, data: formattedData });
     } catch (error) {
       console.error('Error while findOne: ', error);
       sendError.internalServer(res, error);

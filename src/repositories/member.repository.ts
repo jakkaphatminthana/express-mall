@@ -1,5 +1,5 @@
 import { Op, Transaction, WhereOptions } from 'sequelize';
-import { Member, Order } from '@/models';
+import { Member, Order, OrderProduct, Product } from '@/models';
 import { MembersQuerySchemaType } from '@/validators/member.validator';
 
 export class MemberRepository {
@@ -9,9 +9,16 @@ export class MemberRepository {
         {
           model: Order,
           as: 'orders',
-          order: [['createdAt', 'DESC']],
+          include: [
+            {
+              model: OrderProduct,
+              as: 'orderProducts',
+              include: [{ model: Product, as: 'product' }],
+            },
+          ],
         },
       ],
+      order: [[{ model: Order, as: 'orders' }, 'createdAt', 'DESC']],
     });
   }
 
