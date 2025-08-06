@@ -1,12 +1,12 @@
 import { toMemberDto } from '@/dto/member.dto';
 import { ControllerBaseFunctionType } from './base.controller';
 import { MemberService } from '@/services/member.service';
-import { sendError } from '@/utils/errorUtils';
 import {
   CreateMemberSchemaType,
   MemberParamSchemaType,
   MembersQuerySchemaType,
 } from '@/validators/member.validator';
+import { sendError, sendSuccess } from '@/utils/http';
 
 export class MemberController {
   private memberSerivce: MemberService;
@@ -30,7 +30,7 @@ export class MemberController {
 
       const formattedData = toMemberDto(result);
 
-      res.status(200).json({ success: true, data: formattedData });
+      return sendSuccess.ok(res, formattedData);
     } catch (error) {
       console.error('Error while findOne: ', error);
       sendError.internalServer(res, error);
@@ -43,9 +43,9 @@ export class MemberController {
   ) => {
     try {
       const query = req.query;
-      const results = await this.memberSerivce.findAll(query);
+      const { data, pagination } = await this.memberSerivce.findAll(query);
 
-      res.status(200).json({ success: true, ...results });
+      return sendSuccess.pagination(res, data, pagination);
     } catch (error) {
       console.error('Error while findAll: ', error);
       sendError.internalServer(res, error);
@@ -60,7 +60,7 @@ export class MemberController {
       const body = req.body as CreateMemberSchemaType;
       const data = await this.memberSerivce.create(body);
 
-      res.status(200).json({ success: true, data });
+      return sendSuccess.created(res, data);
     } catch (error) {
       console.error('Error while create: ', error);
       sendError.internalServer(res, error);
@@ -75,10 +75,7 @@ export class MemberController {
       const params = req.params;
       await this.memberSerivce.delete(params.memberId);
 
-      res.status(200).json({
-        success: true,
-        message: 'Delete Member successful.',
-      });
+      return sendSuccess.ok(res, undefined, 'Delete Member successful.');
     } catch (error) {
       console.error('Error while delete: ', error);
       sendError.internalServer(res, error);

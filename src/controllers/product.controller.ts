@@ -1,12 +1,13 @@
 import { ControllerBaseFunctionType } from './base.controller';
-import { sendError } from '@/utils/errorUtils';
 import { ProductService } from '@/services/product.service';
+import { sendError, sendSuccess } from '@/utils/http';
 import {
   CreateProductSchemaType,
   ProductQuerySchemaType,
   UpdateProductParamSchemaType,
   UpdateProductSchemaType,
 } from '@/validators/product.validator';
+import { Response } from 'express';
 
 export class ProductController {
   private productService: ProductService;
@@ -19,12 +20,10 @@ export class ProductController {
     async (req, res) => {
       try {
         const query = req.query;
-        const result = await this.productService.getProducts(query);
+        const { data, pagination } =
+          await this.productService.getProducts(query);
 
-        res.status(200).json({
-          success: true,
-          ...result,
-        });
+        return sendSuccess.pagination(res, data, pagination);
       } catch (error) {
         console.error('Error while getProducts: ', error);
         sendError.internalServer(res, error);
@@ -34,15 +33,12 @@ export class ProductController {
   create: ControllerBaseFunctionType<CreateProductSchemaType, {}, {}> = async (
     req,
     res,
-  ): Promise<void> => {
+  ) => {
     try {
       const body = req.body;
       const result = await this.productService.createProduct(body);
 
-      res.status(201).json({
-        success: true,
-        data: result,
-      });
+      return sendSuccess.created(res, result);
     } catch (error) {
       console.error('Error while create: ', error);
       sendError.internalServer(res, error);
@@ -53,7 +49,7 @@ export class ProductController {
     UpdateProductSchemaType,
     UpdateProductParamSchemaType,
     {}
-  > = async (req, res): Promise<void> => {
+  > = async (req, res) => {
     try {
       const param = req.params;
       const body = req.body as UpdateProductSchemaType;
@@ -63,10 +59,7 @@ export class ProductController {
         body,
       );
 
-      res.status(200).json({
-        success: true,
-        data: result,
-      });
+      return sendSuccess.ok(res, result);
     } catch (error) {
       console.error('Error while update: ', error);
       sendError.internalServer(res, error);
@@ -74,15 +67,12 @@ export class ProductController {
   };
 
   delete: ControllerBaseFunctionType<{}, UpdateProductParamSchemaType, {}> =
-    async (req, res): Promise<void> => {
+    async (req, res) => {
       try {
         const param = req.params;
         await this.productService.deleteProduct(param.productId);
 
-        res.status(200).json({
-          success: true,
-          message: 'Delete Product successful.',
-        });
+        return sendSuccess.ok(res, undefined, 'Delete Product successful.');
       } catch (error) {
         console.error('Error while delete: ', error);
         sendError.internalServer(res, error);

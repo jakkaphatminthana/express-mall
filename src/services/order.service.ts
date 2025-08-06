@@ -29,39 +29,39 @@ export class OrderService {
 
   async createOrder(request: CreateOrderSchemaType) {
     try {
-      return await sequelize.transaction(async (t) => {
-        let totalPoints = 0;
-        let totalOrderPrice = 0;
+      let totalPoints = 0;
+      let totalOrderPrice = 0;
 
-        // check product
-        for (const item of request.orderProducts) {
-          const product = await this.productRepository.findById(item.productId);
-          if (!product) {
-            throw createError.notFound(`Product "${item.productId}" not found`);
-          }
-
-          if (!product.isActive) {
-            throw createError.badRequest(
-              `Product "${item.productId}" is not active`,
-            );
-          }
-
-          const hasStock = await this.productRepository.checkStock(
-            item.productId,
-            item.amount,
-          );
-          if (!hasStock) {
-            throw createError.conflict(
-              `Product "${product.name}" is insufficient stock`,
-            );
-          }
-
-          const priceTotal = product.price * item.amount;
-          totalOrderPrice += priceTotal;
+      // check product
+      for (const item of request.orderProducts) {
+        const product = await this.productRepository.findById(item.productId);
+        if (!product) {
+          throw createError.notFound(`Product "${item.productId}" not found`);
         }
 
-        totalPoints = Math.floor(totalOrderPrice / POINT_RATE);
+        if (!product.isActive) {
+          throw createError.badRequest(
+            `Product "${item.productId}" is not active`,
+          );
+        }
 
+        const hasStock = await this.productRepository.checkStock(
+          item.productId,
+          item.amount,
+        );
+        if (!hasStock) {
+          throw createError.conflict(
+            `Product "${product.name}" is insufficient stock`,
+          );
+        }
+
+        const priceTotal = product.price * item.amount;
+        totalOrderPrice += priceTotal;
+      }
+
+      totalPoints = Math.floor(totalOrderPrice / POINT_RATE);
+
+      return await sequelize.transaction(async (t) => {
         // create Order
         const order = await this.orderRepository.create(
           {

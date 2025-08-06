@@ -2,11 +2,13 @@ import z from 'zod';
 
 export interface PaginationResponse<T> {
   data: T[];
-  pagination: {
-    currentPage: number;
-    totalPage: number;
-    totalItem: number;
-  };
+  pagination: Pagination;
+}
+
+export interface Pagination {
+  currentPage: number;
+  totalPage: number;
+  totalItem: number;
 }
 
 export const PaginationSchema = z.object({

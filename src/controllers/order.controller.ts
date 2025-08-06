@@ -5,8 +5,8 @@ import {
   OrderIdParamSchemaType,
   OrdersQuerySchemaType,
 } from '@/validators/order.validator';
-import { sendError } from '@/utils/errorUtils';
 import { toOrderDto } from '@/dto/order.dto';
+import { sendError, sendSuccess } from '@/utils/http';
 
 export class OrderController {
   private orderService: OrderService;
@@ -21,7 +21,7 @@ export class OrderController {
         const body = req.body;
         const result = await this.orderService.createOrder(body);
 
-        res.status(201).json({ success: true, data: result });
+        return sendSuccess.created(res, result);
       } catch (error) {
         console.error('Error while createOrder: ', error);
         sendError.internalServer(res, error);
@@ -41,7 +41,7 @@ export class OrderController {
         return;
       }
 
-      res.status(200).json({ success: true, data: result });
+      return sendSuccess.ok(res, result);
     } catch (error) {
       console.error('Error while findOne: ', error);
       sendError.internalServer(res, error);
@@ -54,13 +54,11 @@ export class OrderController {
   ) => {
     try {
       const query = req.query;
-      const result = await this.orderService.findAll(query);
+      const { data, pagination } = await this.orderService.findAll(query);
 
-      const formattedListData = result.data.map((item) => toOrderDto(item));
+      const formattedListData = data.map((item) => toOrderDto(item));
 
-      res
-        .status(200)
-        .json({ success: true, ...result, data: formattedListData });
+      return sendSuccess.pagination(res, formattedListData, pagination);
     } catch (error) {
       console.error('Error while findAll: ', error);
       sendError.internalServer(res, error);
