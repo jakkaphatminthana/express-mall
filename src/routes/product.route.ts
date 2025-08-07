@@ -13,34 +13,25 @@ const router = Router();
 const productController = new ProductController();
 
 /**
- * @swagger
- * /api/products:
- *   get:
- *     tags: [Products]
- *     summary: Fetch all products
- *     requestBody:
- *       required: false
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/ProductQuery'
- *     responses:
- *       200:
- *         description: OK
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ProductListResponse'
- *       400:
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorBadRequest'
- *       500:
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorInternalServerError'
+ * GET /products
+ * @tags [Products]
+ * @summary Get all products
+ * @description get products
+ * @param {string} page.query - page - page number
+ * @param {string} pageSize.query - pageSize - number of items per page
+ * @param {string} search.query - search - search keyword
+ * @param {boolean} isActive.query - isActive - filter by active status
+ * @return {ListProductsResponse} 200 - Success response - application/json
+ * @return {ErrorResponse} 500 - Internal server error - application/json
+ * @example response - 500 - Internal Server Error
+ * {
+ *   "success": false,
+ *   "error": {
+ *     "message": "Internal server error",
+ *     "code": "INTERNAL_SERVER_ERROR",
+ *     "details": "Error details if available"
+ *   }
+ * }
  */
 router.get(
   '/',
